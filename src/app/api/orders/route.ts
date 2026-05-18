@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { Product, Vendor } from "@prisma/client";
 
 // POST /api/orders - Create order
 export async function POST(request: NextRequest) {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Calculate totals
     let subtotal = 0;
     const orderItems = data.items.map((item) => {
-      const product = products.find((p) => p.id === item.productId);
+      const product = products.find((p: Product & { vendor: Vendor }) => p.id === item.productId);
       if (!product) throw new Error(`Product ${item.productId} not found`);
 
       const price = product.salePrice?.toNumber() || product.basePrice.toNumber();
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
         productId: item.productId,
         vendorId: product.vendorId,
         title: product.title,
-        image: product.images[0],
+        image: Array.isArray(product.images) ? product.images[0] : product.images,
         price,
         quantity: item.quantity,
         total,
@@ -103,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ order }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
@@ -136,7 +137,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ orders });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching orders:", error);
     return NextResponse.json(
       { error: "Failed to fetch orders" },

@@ -1,0 +1,37 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin", "bengali"] });
+
+export const metadata: Metadata = {
+  title: "Uddoktar Bazar - উদ্যোক্তার বাজার | Multi-Vendor Marketplace",
+  description:
+    "Bangladesh's leading multi-vendor e-commerce marketplace connecting local entrepreneurs, partners, dealers, and consumers.",
+  keywords: [
+    "uddoktar bazar",
+    "e-commerce",
+    "bangladesh",
+    "multi-vendor",
+    "online shopping",
+    "local marketplace",
+  ],
+  openGraph: {
+    title: "Uddoktar Bazar - উদ্যোক্তার বাজার",
+    description: "Multi-Vendor E-Commerce Marketplace in Bangladesh",
+    type: "website",
+    locale: "bn_BD",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="bn">
+      <body className={inter.className}>{children}</body>
+    </html>
+  );
+}

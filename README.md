@@ -130,3 +130,4 @@ docker-compose exec app npm run db:seed
 ## 📄 License
 
 MIT License - Built for Bangladeshi entrepreneurs.
+
